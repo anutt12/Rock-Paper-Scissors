@@ -48,15 +48,33 @@ const getWinner = (cChoice, pChoice) => {
 };
 
 startGameBtn.addEventListener('click', () => {
-    if (gameIsRunning) {
-        return;
-    }
+    if (gameIsRunning) return;
+
     gameIsRunning = true;
     console.log('Game is starting...');
+
+    const DRAW_MESSAGE = (playerChoice, computerChoice) => `You picked ${playerChoice}, computer picked ${computerChoice}, therefore you had a draw`;
+    const WIN_MESSAGE = (playerChoice, computerChoice) => `You picked ${playerChoice}, computer picked ${computerChoice}, therefore you won!`;
+    const LOSE_MESSAGE = (playerChoice, computerChoice) => `You picked ${playerChoice}, computer picked ${computerChoice}, therefore you lost!`;
+
+    const generateMessage = (winner, playerChoice, computerChoice) => {
+        switch (winner) {
+            case Defaults.RESULT_DRAW:
+                return DRAW_MESSAGE(playerChoice, computerChoice);
+            case Defaults.RESULT_PLAYER_WINS:
+                return WIN_MESSAGE(playerChoice, computerChoice);
+            default:
+                return LOSE_MESSAGE(playerChoice, computerChoice);
+        }
+    };
 
     const playerChoice = getPlayerChoice();
     const computerChoice = getComputerChoice();
     const winner = getWinner(computerChoice, playerChoice);
+    const message = generateMessage(winner, playerChoice, computerChoice);
+    alert(message);
+
+    gameIsRunning = false;
 
     console.log(winner);
 });

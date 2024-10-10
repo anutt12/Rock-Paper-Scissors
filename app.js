@@ -1,59 +1,62 @@
 const startGameBtn = document.getElementById('start-game-btn');
 
-const ROCK = 'ROCK';
-const PAPER = 'PAPER';
-const SCISSORS = 'SCISSORS';
-const DEFAULT_USER_CHOICE = ROCK;
-const RESULT_DRAW = 'DRAW';
-const RESULT_PLAYER_WINS = 'PLAYER_WINS';
-const RESULT_COMPUTER_WINS = 'COMPUTER_WINS';
+const Choices = {
+    ROCK: 'ROCK',
+    PAPER: 'PAPER',
+    SCISSORS: 'SCISSORS'
+};
+
+const Defaults = {
+    USER_CHOICE: Choices.ROCK,
+    RESULT_DRAW: 'DRAW',
+    RESULT_PLAYER_WINS: 'PLAYER_WINS',
+    RESULT_COMPUTER_WINS: 'COMPUTER_WINS'
+};
 
 let gameIsRunning = false;
 
-const getPlayerChoice = function () {
-    const selection = prompt(`${ROCK}, ${PAPER} or ${SCISSORS}?`, '').toUpperCase();
-    if (selection !== ROCK && selection !== PAPER && selection !== SCISSORS) {
-        alert(`Invalid choice! We chose ${DEFAULT_USER_CHOICE} for you!`);
-        return DEFAULT_USER_CHOICE;
+const getPlayerChoice = () => {
+    const selection = prompt(`${Choices.ROCK}, ${Choices.PAPER} or ${Choices.SCISSORS}?`, '').toUpperCase();
+    if (!Object.values(Choices).includes(selection)) {
+        alert(`Invalid choice! We chose ${Defaults.USER_CHOICE} for you!`);
+        return Defaults.USER_CHOICE;
     }
     return selection;
 }
 
-function getComputerChoice() {
+const getComputerChoice = () => {
     const randomValue = Math.random();
     if (randomValue < 0.34) {
-        return ROCK;
+        return Choices.ROCK;
     } else if (randomValue < 0.67) {
-        return PAPER;
+        return Choices.PAPER;
     } else {
-        return SCISSORS;
+        return Choices.SCISSORS;
     }
 };
 
 const getWinner = (cChoice, pChoice) => {
-    const isDraw = (cChoice, pChoice) => cChoice === pChoice;
-    const isPlayerWinner = (cChoice, pChoice) =>
-        (cChoice === ROCK && pChoice === PAPER) ||
-        (cChoice === PAPER && pChoice === SCISSORS) ||
-        (cChoice === SCISSORS && pChoice === ROCK);
+    const isDraw = cChoice === pChoice;
+    const isPlayerWinner = (cChoice === Choices.ROCK && pChoice === Choices.PAPER) ||
+        (cChoice === Choices.PAPER && pChoice === Choices.SCISSORS) ||
+        (cChoice === Choices.SCISSORS && pChoice === Choices.ROCK);
 
-    if (isDraw(cChoice, pChoice)) {
-        return RESULT_DRAW;
-    } else if (isPlayerWinner(cChoice, pChoice)) {
-        return RESULT_PLAYER_WINS;
-    } else {
-        return RESULT_COMPUTER_WINS;
+    if (isDraw) {
+        return Defaults.RESULT_DRAW;
     }
+    return isPlayerWinner ? Defaults.RESULT_PLAYER_WINS : Defaults.RESULT_COMPUTER_WINS;
 };
 
-startGameBtn.addEventListener('click', function () {
+startGameBtn.addEventListener('click', () => {
     if (gameIsRunning) {
         return;
     }
     gameIsRunning = true;
     console.log('Game is starting...');
-    const playerSelection = getPlayerChoice();
+
+    const playerChoice = getPlayerChoice();
     const computerChoice = getComputerChoice();
-    const winner = getWinner(computerChoice, playerSelection);
+    const winner = getWinner(computerChoice, playerChoice);
+
     console.log(winner);
 });
